@@ -30,7 +30,7 @@ export interface Database {
           name?: string
         }
         Relationships: []
-      },
+      }
       todos: {
         Row: {
           created_at: string
