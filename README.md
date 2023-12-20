@@ -31,6 +31,9 @@ yarn install
 * Install and connect to a Supabase project. [Supabase](https://supabase.io/docs/guides/with-nextjs). Prefer using local development via the [Supabase CLI](https://supabase.io/docs/guides/local-development)
 * You'll need Docker installed for local Supabase dev
 * Create a `.env.local` file in the root of the project and add the variables. See `.env.example` and [these docs](https://supabase.io/docs/guides/local-development)
+* Link to Vercel for deployments
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fhello-world)
 
 ### Start development
 
