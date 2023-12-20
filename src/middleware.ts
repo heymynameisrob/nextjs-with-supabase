@@ -1,38 +1,55 @@
-/**
- * Middleware - Runs before every request. Checking to see if user is authenticated, and redirect them to the relevant page (login or auth route).
- *
- */
-
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { NextResponse } from "next/server";
-
 import type { NextRequest } from "next/server";
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
+import { doesUrlMatch } from "@/utils";
 
-export async function middleware(req: NextRequest) {
-  const authRoute = "/";
-  const loginRoute = "/login";
-
+export async function middleware(req: NextRequest) {  
   const res = NextResponse.next();
-  const supabase = createMiddlewareClient({ req, res });
+  
+  /**
+   * Routes - By default we assume everything is a private route, unless it's contained in the arrays below.
+   */
 
-  // Checks to see if user is authenticated
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const authRoutes = ['/login', '/reset-password'] // Routes for authenticating users (login, reset password, etc.)
+  const publicRoutes = [...authRoutes, '/', '/no-access']; // Routes anyone can access
 
-  // If user is authenticated AND the current path is / redirect the user to /events
-  if (user && req.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL(authRoute, req.url));
+
+  /**
+   * Auth Check - Assuming Supabase is handling authentication. 
+   */
+
+  // const supabase = createMiddlewareClient({ req, res });
+  // const { data: { user } } = await supabase.auth.getUser();
+  const user = {id: '1'}; // TODO: Remove this line once you've set up Supabase authentication
+
+  /**
+   * Redirects - Redirect users to the relevant page based on their authentication status and the route they're trying to access.
+   */
+  
+  // 01. If user is logged in and trying to access auth routes, redirect to dashboard
+  if(user && doesUrlMatch(authRoutes, req.nextUrl.pathname)) {    
+
+    return NextResponse.redirect(new URL('/dashboard', req.url)); 
   }
 
-  // if user is not signed in AND the current path is not / redirect the user to / (Login)
-  if (!user && req.nextUrl.pathname !== "/") {
-    return NextResponse.redirect(new URL(loginRoute, req.url));
+  // 02. If user is logged out and trying to access private routes, redirect to login
+  if(!user && !doesUrlMatch(publicRoutes, req.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  return res;
+  return res
+
 }
 
 export const config = {
-  matcher: ["/", "/login"],
-};
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|api).*)',
+  ],
+}

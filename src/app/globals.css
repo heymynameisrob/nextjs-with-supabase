@@ -1,3 +1,144 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+
+  /**
+  * Root Variables - These are aliased in tailwind.config.js. If you want to edit the core theme, change these. If you just want to shift the usage of these colors, edit there.
+  */
+  
+  --color-accent: hsla(0, 100%, 50%, 1);
+  --color-accent-light: hsla(0, 100%, 50%, 1);
+  --color-accent-dark: hsla(0, 100%, 50%, 1);
+
+  --color-border: hsla(32, 32%, 32%, 0.08);
+
+  /* Base Grays - Can replace with either Radix UI or Tailwind grays */
+  
+  --gray-1: hsla(0, 0%, 100%, 1); /* App Background */
+  --gray-2: hsla(0, 0%, 96%, 1); /* Subtle UI Background */
+  --gray-3: hsla(0, 0%, 94%, 1); /* UI Background */  
+  --gray-4: hsla(0, 0%, 90%, 1); /* UI Hover or pressed */   
+  --gray-5: hsla(0, 0%, 88%, 1); /* UI Active or selected */
+  --gray-6: hsla(0, 0%, 85%, 1); /* Border */
+  --gray-7: hsla(0, 0%, 81%, 1); /* Med contrast border / focus */
+  --gray-8: hsla(0, 0%, 73%, 1); /* Hover UI border */
+  --gray-9: hsla(0, 0%, 55%, 1); /* Disabled Text */
+  --gray-10: hsla(0, 0%, 51%, 1); /* General Gray */
+  --gray-11: hsla(0, 0%, 39%, 1); /* Secondary Text */
+  --gray-12: hsla(0, 0%, 12%, 1); /* Text */
+  --gray-inverted: hsla(0, 0%, 93%, 1); /* Inverted Text */
+}
+
+:root.dark {
+  --color-accent: hsla(0, 100%, 50%, 1);
+  --color-accent-light: hsla(0, 100%, 50%, 1);
+  --color-accent-dark: hsla(0, 100%, 50%, 1);
+
+  --color-border: hsla(238, 238%, 23%, 0.08);
+  
+  --gray-1: hsla(0, 0%, 7%, 1);
+  --gray-2: hsla(0, 0%, 10%, 1);
+  --gray-3: hsla(0, 0%, 13%, 1);
+  --gray-4: hsla(0, 0%, 16%, 1);
+  --gray-5: hsla(0, 0%, 19%, 1);
+  --gray-6: hsla(0, 0%, 22%, 1);
+  --gray-7: hsla(0, 0%, 28%, 1);
+  --gray-8: hsla(0, 0%, 38%, 1);
+  --gray-9: hsla(0, 0%, 43%, 1);
+  --gray-10: hsla(0, 0%, 48%, 1);
+  --gray-11: hsla(0, 0%, 68%, 1);
+  --gray-12: hsla(0, 0%, 93%, 1);
+  --gray-inverted: hsla(0, 0%, 12%, 1);
+}
+
+@layer {
+  /* Base */
+
+  body {
+    overscroll-behavior-y: none;
+  }
+
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+
+  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: none !important;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 3px !important;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: transparent;  
+  }
+
+  /* Layout */
+  .app-layout {
+    display:grid;
+    grid-template-rows: minmax(auto, 64px) minmax(960px, 1fr) auto;
+    height:100dvh;
+  }
+  .sidebar-layout {
+    display:grid;
+    grid-template-rows: minmax(auto, 64px) 1fr auto;
+    @apply w-full h-full gap-1;
+  }
+
+  /* Basic Typography */
+  h1 {
+    @apply text-2xl leading-9 font-medium tracking-tight
+  }
+
+  h2 {
+    @apply text-xl leading-8 font-medium tracking-tight
+  }
+
+  h3 {
+    @apply text-lg leading-7 font-medium tracking-tight
+  }
+
+  h4 {
+    @apply text-base leading-6 font-medium tracking-tight
+  }
+
+  p {
+    @apply text-base leading-6 tracking-tight
+  }
+
+  small {
+    @apply text-sm leading-5
+  }
+
+  span {
+    @apply block text-xs leading-5
+  }
+
+  strong {
+    @apply font-medium
+  }
+
+  /* Tiptap */
+  .tiptap p.is-editor-empty:first-child::before {
+    color: var(--colors-text-muted);
+    font-size: 14px;    
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .tiptap ul {
+    @apply list-disc list-inside
+  }
+
+  /* Custom Shadows */
+  .shadow-stack {
+    @apply shadow-[0px_0px_0px_1px,0px_1px_1px_-0.5px,0px_3px_3px_-1.5px,0px_6px_6px_-3px,0px_12px_12px_-6px,0px_24px_24px_-12px] shadow-black/[0.06];
+  }
+
+}
