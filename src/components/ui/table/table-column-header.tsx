@@ -1,21 +1,20 @@
-'use client';
-import React from 'react';
-import { Column } from "@tanstack/react-table"
-import { cn } from "@/utils"
-import { Button } from "@/components/ui/button"
+"use client";
+import React from "react";
+import { Column } from "@tanstack/react-table";
+import { cn } from "@/utils";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDown, EyeOff } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDown } from "lucide-react";
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<TData, TValue>
-  title: string
+  column: Column<TData, TValue>;
+  title: string;
 }
 
 export function TableColumnHeader<TData, TValue>({
@@ -24,7 +23,7 @@ export function TableColumnHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>
+    return <div className={cn(className)}>{title}</div>;
   }
 
   return (
@@ -54,9 +53,9 @@ export function TableColumnHeader<TData, TValue>({
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDownIcon className="mr-2 h-3 w-3 text-muted" />
             Desc
-          </DropdownMenuItem>          
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }

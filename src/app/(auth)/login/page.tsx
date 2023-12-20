@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default async function LoginPage() {
-
-  return(
+  return (
     <Card className="p-4">
       <CardContent className="flex flex-col items-center gap-4">
         <h1>Login to app</h1>
@@ -13,6 +12,6 @@ export default async function LoginPage() {
           Sigin with Google
         </Button>
       </CardContent>
-    </Card>      
+    </Card>
   );
 }

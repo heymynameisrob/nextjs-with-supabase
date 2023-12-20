@@ -37,7 +37,7 @@ export async function getAllItemsAction() {
 
 export async function getItemAction(id: string) {
   const supabase = createServerActionClient({ cookies });
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("items")
     .select("*")
     .eq("id", id)

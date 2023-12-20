@@ -1,8 +1,14 @@
-import * as React from "react"
-import { SVGProps } from "react"
+import * as React from "react";
+import { SVGProps } from "react";
 
 export const GoogleIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    fill="none"
+    {...props}
+  >
     <g clipPath="url(#a)">
       <path
         fill="#4285F4"
@@ -27,4 +33,4 @@ export const GoogleIcon = (props: SVGProps<SVGSVGElement>) => (
       </clipPath>
     </defs>
   </svg>
-)
+);

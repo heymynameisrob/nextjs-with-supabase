@@ -13,15 +13,16 @@ export async function GET(request: Request) {
 
   const supabase = createRouteHandlerClient({ cookies });
 
-  if(code) {
-    await supabase.auth.exchangeCodeForSession(code);    
-    const {data: {user}} = await supabase.auth.getUser();
+  if (code) {
+    await supabase.auth.exchangeCodeForSession(code);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) return NextResponse.redirect(requestUrl.origin);
 
-    cookies().set('userId', user.id, { secure: true, httpOnly: true }) // Set a cookie with the user's ID
+    cookies().set("userId", user.id, { secure: true, httpOnly: true }); // Set a cookie with the user's ID
   }
-
 
   // URL to redirect to after sign in process completes
   return NextResponse.redirect(requestUrl.origin);
