@@ -15,7 +15,7 @@
     "migrate:push": "npx supabase db push",
     "migrate": "yarn migrate:prep && yarn migrate:push",    
     "prep:tsc": "npx tsc --noEmit --incremental",
-    "prep:lint":"next lint --fix && next lint",
+    "prep:lint":"next lint --fix",
     "prepare-commit": "husky install && yarn prep:tsc && yarn prep:lint"
   },
   "dependencies": {
