@@ -1,18 +1,20 @@
-// TODO: Duplicate or move this file outside the `_examples` folder to make it a route
+/**
+ * Route Handlers create dynamic 'API' routes.
+ * Can be used to create serverless functions and APIs.
+ * Prefer for server-heavy functions over Server Components
+ */
 
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
+// export const runtime = 'edge'; // Prefer edge for expensive server functions
 
 export async function GET() {
-  // Create a Supabase client configured to use cookies
   const supabase = createRouteHandlerClient({ cookies });
 
-  // This assumes you have a `todos` table in Supabase. Check out
-  // the `Create Table and seed with data` section of the README 👇
-  // https://github.com/vercel/next.js/blob/canary/examples/with-supabase/README.md
+  // Do some kinda of server side logic or call to a database here
   const { data: todos } = await supabase.from("todos").select();
 
   return NextResponse.json(todos);

@@ -1,8 +1,9 @@
 "use server";
-
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { getBaseUrl } from "@/utils";
 
 export async function handleLoginWithGoogle() {
   /**
@@ -14,73 +15,17 @@ export async function handleLoginWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      queryParams: {
-        access_type: "offline",
-        prompt: "consent",
-      },
+      redirectTo: `${getBaseUrl()}/api/auth/callback`, // Callback after Google login. Creates session on Supabase.
     },
   });
 
   if (error || !data) {
-    throw error;
+    console.log(error);
+    throw Error("An error occurred while logging in with Google");
   }
 
-  revalidatePath("/", "layout"); // Refreshes all app data
-
-  return data;
-}
-
-export async function handleLoginWithEmailAndPassword(data: {
-  email: string;
-  password: string;
-}) {
-  const { email, password } = data;
-
-  const supabase = createServerActionClient({ cookies });
-
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error || !user) {
-    throw error;
-  }
-
-  revalidatePath("/", "layout"); // Refreshes all app data
-
-  return user;
-}
-
-export async function handleSignUpWithEmailAndPassword(data: {
-  email: string;
-  password: string;
-}) {
-  const { email, password } = data;
-
-  const supabase = createServerActionClient({ cookies });
-
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: `${location.origin}/api/auth/callback`,
-    },
-  });
-
-  if (error) {
-    throw error;
-  }
-
-  revalidatePath("/", "layout"); // Refreshes all app data
-
-  return user;
+  revalidatePath("/", "layout");
+  redirect(data.url || "/dashboard");
 }
 
 export async function handleLogout() {
@@ -93,6 +38,34 @@ export async function handleLogout() {
   }
 
   cookies().delete("userId"); // Set a cookie with the user's ID
-
   revalidatePath("/", "layout"); // Refreshes all app data
+  redirect("/"); // Redirects to the homepage
+}
+
+export async function updateUserProfile(id: string, data: any) {
+  const supabase = createServerActionClient({ cookies });
+
+  const { error, status } = await supabase
+    .from("users")
+    .update(data)
+    .eq("id", id);
+
+  if (error) return { error, status };
+
+  revalidateTag("user");
+
+  return { status };
+}
+
+export async function deleteAccount(id: string) {
+  const supabase = createServerActionClient({ cookies });
+
+  const { error, status } = await supabase.from("users").delete().eq("id", id);
+
+  await handleLogout();
+
+  revalidatePath("/", "layout");
+
+  if (error) return { error, status };
+  return { status };
 }

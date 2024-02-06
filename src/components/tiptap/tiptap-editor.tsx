@@ -1,61 +1,81 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import StarterKit from "@tiptap/starter-kit";
-import BulletList from "@tiptap/extension-bullet-list";
-import Placeholder from "@tiptap/extension-placeholder";
+import React, { useEffect } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import type { Editor as EditorType } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
+import { defaultExtensions } from "@/components/tiptap/extensions";
+import { defaultEditorProps } from "@/components/tiptap/tiptap-props";
 import { TipTapBubbleMenu } from "@/components/tiptap/tiptap-menu";
-import { cn } from "@/utils";
+import { MotionDiv } from "@/components/motion-div";
 
-export const TipTapEditor = ({ onUpdate, content, ...props }: any) => {
-  const [isEditable, setIsEditable] = useState(true);
+export const TipTapEditor = ({
+  content,
+  enableLocalStorage,
+}: {
+  content: string;
+  enableLocalStorage?: boolean;
+}) => {
+  /**
+   * Setup the editor with the default extensions and editor props.
+   */
 
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      BulletList,
-      Placeholder.configure({
-        emptyEditorClass: "is-editor-empty",
-        placeholder: props.placeholder,
-      }),
-    ],
-    content: content,
+    extensions: [...defaultExtensions],
     editorProps: {
-      attributes: {
-        class:
-          "focus:outline-none w-full max-w-full bg-ui-low overflow-y-auto select-auto px-3 py-2.5 prose-sm prose-p:text-sm text-primary h-[120px] overflow-y-auto dark:prose-inverted prose-strong:text-primary",
-      },
+      ...defaultEditorProps,
     },
     onUpdate: ({ editor }) => {
-      onUpdate(editor.getHTML());
+      // Handle saving the editor
+      handleSaveContent(editor);
+    },
+    onBlur: () => {
+      stop();
     },
   });
 
+  const handleSaveContent = useDebouncedCallback(async (editor: EditorType) => {
+    if (!enableLocalStorage) return;
+
+    const content = editor.getHTML();
+    localStorage.setItem("doc", JSON.stringify({ content }));
+
+    // Add a call to the API/DB to save the content
+  }, 1000);
+
+  /**
+   * Hydrate the editor with the document content.
+   * Setup editor and make editable
+   */
+
   useEffect(() => {
-    if (editor) {
-      editor.setEditable(isEditable);
-      setIsEditable(true);
+    if (!editor) return;
+
+    const localDoc = localStorage.getItem("doc");
+    if (localDoc) {
+      const { content } = JSON.parse(localDoc);
+      editor.commands.setContent(content);
     }
-  }, [isEditable, editor]);
+
+    // Alternatively, pass content in from props (e.g server-side rendered content)
+    // if(content) {
+    //   editor.commands.setContent(content);
+    // }
+
+    editor.setEditable(true);
+    editor.commands.focus();
+  }, [editor, content]);
 
   return (
-    <div
-      {...props}
-      className={cn(
-        "flex flex-col items-stretch border-[0.5px] border-outline bg-background relative rounded-lg overflow-hidden focus-within:border-primary dark:focus-within:border-white focus-within:ring-2",
-      )}
-      role="presentation"
-    >
-      {editor && <TipTapBubbleMenu editor={editor} />}
-      {editor ? (
-        <EditorContent
-          disabled={props.disabled}
-          content={content}
-          editor={editor}
-        />
-      ) : (
-        <div className="h-[64px]"></div>
-      )}
-    </div>
+    editor && (
+      <MotionDiv
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.15 }}
+        className="h-full overflow-y-scroll"
+      >
+        <TipTapBubbleMenu editor={editor} />
+        <EditorContent editor={editor} />
+      </MotionDiv>
+    )
   );
 };

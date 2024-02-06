@@ -66,3 +66,25 @@ export const getRandomEmoji = () => {
   const baseEmojis = "😊🙃🤪🤓🤯😴💩👻👽🤖👾👐🖖✌️🤟🤘🤙👋🐭🦕🦖🐉";
   return baseEmojis[Math.floor(Math.random() * baseEmojis.length)];
 };
+
+export const getBaseUrl = () => {
+  let url =
+    process?.env?.NEXT_PUBLIC_SITE_URL ?? // Production Domain
+    process?.env?.VERCEL_URL ?? // Automatically set by Vercel (for previews)
+    "http://localhost:3000/";
+  url = url.includes("http") ? url : `https://${url}`;
+  url = url.charAt(url.length - 1) === "/" ? url : `${url}/`;
+  return url;
+};
+
+export const makeStringLabel = (string: string) => {
+  // swap - _ and . for spaces and capitalise first letter
+  return string
+    .replace(/-/g, " ")
+    .replace(/_/g, " ")
+    .replace(/\./g, " ")
+    .replace(
+      /\w\S*/g,
+      (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
+    );
+};

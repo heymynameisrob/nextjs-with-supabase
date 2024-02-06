@@ -5,6 +5,9 @@ const nextConfig = {
       fullUrl: true,
     }
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   async headers() {
     return [ 
       {

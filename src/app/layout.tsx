@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Providers } from "@/context/providers";
 import { cn } from "@/utils";
 
 import "./globals.css";
@@ -10,8 +10,8 @@ import "microtip/microtip.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Crit App",
-  description: "Get feedback from clients like it was nutin",
+  title: "Next JS & Supabase Full Stack Starter",
+  description: "Some cool shit here!",
 };
 
 export default function RootLayout({
@@ -27,14 +27,7 @@ export default function RootLayout({
           "bg-background text-primary antialiased min-h-[100dvh]",
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <Providers>{children}</Providers>
         <Toaster />
       </body>
     </html>

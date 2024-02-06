@@ -1,5 +1,6 @@
 /**
- * Example Actions - These server actions are called from the client using the useAction hook.
+ * Server Actions - Async functions that run on the server.
+ * Prefer for mutations, light server-side logic, and database calls.
  */
 
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";

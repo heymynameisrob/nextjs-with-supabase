@@ -18,7 +18,9 @@ export async function middleware(req: NextRequest) {
 
   // const supabase = createMiddlewareClient({ req, res });
   // const { data: { user } } = await supabase.auth.getUser();
-  const user = { id: "1" }; // TODO: Remove this line once you've set up Supabase authentication
+
+  // TODO: Remove this line once you've set up Supabase authentication
+  const user = { id: "1" };
 
   /**
    * Redirects - Redirect users to the relevant page based on their authentication status and the route they're trying to access.
